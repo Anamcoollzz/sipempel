@@ -116,13 +116,12 @@
 
                 <div class="card-body">
                     <form>
-                        @csrf
 
                         <div class="form-group row">
                             <label for="tanggal" class="col-md-4 col-form-label text-md-right">{{ __('Tanggal') }} <font color="red">*</font></label>
 
                             <div class="col-md-6">
-                                <input data-toggle="datemask" id="tanggal" type="text" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ old('tanggal') ? old('tanggal') : date('Y-m-d') }}" required autocomplete="tanggal" autofocus>
+                                <input data-toggle="datemask" id="tanggal" type="text" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ $tanggal }}" required autocomplete="tanggal" autofocus>
 
                                 @error('tanggal')
                                 <span class="invalid-feedback" role="alert">
@@ -133,10 +132,21 @@
                         </div>
 
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
+                            <div class="col-md-8 offset-md-4">
                                 <button type="submit" class="btn btn-danger">
                                     {{ __('Lihat') }}
                                 </button>
+                                @if($tanggal != date('Y-m-d'))
+                                <a class="btn btn-danger" href="?tanggal={{ date('Y-m-d') }}">Hari Ini</a>
+                                @endif
+                                @if($tanggal != date('Y-m-d', strtotime('-1 days')))
+                                <a class="btn btn-danger" href="?tanggal={{ date('Y-m-d', strtotime('-1 days')) }}">Kemarin</a>
+                                @endif
+                                @foreach (range(2, 4) as $jarak)
+                                @if($tanggal != date('Y-m-d', strtotime('-'.$jarak.' days')))
+                                <a class="btn btn-danger" href="?tanggal={{ date('Y-m-d', strtotime('-'.$jarak.' days')) }}">{{ $jarak }} Hari Lalu</a>
+                                @endif
+                                @endforeach
                             </div>
                         </div>
                     </form>

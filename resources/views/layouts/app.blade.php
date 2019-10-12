@@ -10,8 +10,8 @@
     <title>{{ $title }}</title>
 
     <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    {{-- <link rel="dns-prefetch" href="//fonts.gstatic.com"> --}}
+    {{-- <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet"> --}}
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -32,12 +32,17 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
+                        @auth
+                        <li class="nav-item @if($active == 'dashboard') active @endif">
+                            <a class="nav-link" href="{{ route('home') }}">Dashboard</a>
+                        </li>
+                        <li class="nav-item @if($active == 'pengeluaran.index') active @endif">
                             <a class="nav-link" href="{{ route('pengeluaran.index') }}">Pengeluaran</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item @if($active == 'pemasukan.index') active @endif">
                             <a class="nav-link" href="{{ route('pemasukan.index') }}">Pemasukan</a>
                         </li>
+                        @endauth
                     </ul>
 
                     <!-- Right Side Of Navbar -->

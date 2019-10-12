@@ -13,7 +13,7 @@ class PengeluaranController extends Controller
 		$tanggal = $request->query('tanggal');
 		if(!$tanggal){
 			$tanggal = date('Y-m-d');
-		}elseif(!isDate($tanggal)){
+		}elseif(!$this->isDate($tanggal)){
 			$tanggal = date('Y-m-d');
 		}
 		$data = PemasukanPengeluaran::where('jenis', 'pengeluaran')

@@ -76,4 +76,11 @@ class RegisterController extends Controller
             'api_token' => bcrypt(\Str::random(50)),
         ]);
     }
+
+    public function showRegistrationForm()
+    {
+        return view('auth.register', [
+            'title'     => 'Daftar',
+        ]);
+    }
 }
