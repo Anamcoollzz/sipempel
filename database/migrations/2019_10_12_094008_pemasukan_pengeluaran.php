@@ -1,0 +1,40 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class PemasukanPengeluaran extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('pemasukan_pengeluaran', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('nama_item');
+            $table->string('jenis')->default('pengeluaran')->comment('pengeluaran, pemasukan');
+            $table->string('kategori');
+            $table->double('nominal');
+            $table->date('tanggal');
+            $table->string('tempat');
+            $table->text('deskripsi')->nullable();
+            $table->bigInteger('user_id')->unsigned();
+            $table->foreign('user_id')->on('users')->references('id')->onUpdate('cascade')->onDelete('cascade');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('pemasukan_pengeluaran');
+    }
+}
