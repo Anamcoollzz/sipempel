@@ -60,11 +60,11 @@ class StatistikController extends Controller
 		foreach ($date as $day) {
 			$pengeluaran[] = [
 				'tanggal'	=> $day,
-				'nominal'	=> PemasukanPengeluaran::where('jenis', 'pengeluaran')->where('tanggal', $day)->sum('nominal'),
+				'nominal'	=> PemasukanPengeluaran::where('user_id', \Auth::id())->where('jenis', 'pengeluaran')->where('tanggal', $day)->sum('nominal'),
 			];
 			$pemasukan[] = [
 				'tanggal'	=> $day,
-				'nominal'	=> PemasukanPengeluaran::where('jenis', 'pemasukan')->where('tanggal', $day)->sum('nominal'),
+				'nominal'	=> PemasukanPengeluaran::where('user_id', \Auth::id())->where('jenis', 'pemasukan')->where('tanggal', $day)->sum('nominal'),
 			];
 		}
 		return view('statistik.index', [
