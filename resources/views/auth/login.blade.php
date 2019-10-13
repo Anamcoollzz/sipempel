@@ -71,8 +71,8 @@
 
             <div class="alert alert-info mt-5">
                 Berikut beberapa akun demo yang bisa anda gunakan :) <br>
-                @foreach ($loginDummy as $dummy)
-                Email : <strong>{{ $dummy->email }}</strong> dengan password : <strong>demo{{$dummy->id-1}}</strong> @if(!$loop->last) atau bisa gunakan @endif<br>
+                @foreach (range(1,5) as $dummy)
+                Email : <strong>demo{{ $dummy.'@sipempel.com' }}</strong> dengan password : <strong>demo{{$dummy}}</strong> @if(!$loop->last) atau bisa gunakan @endif<br>
                 @endforeach
                 Atau anda bisa mendaftar sendiri lewat <a href="{{ route('register') }}" class="btn btn-primary">Daftar</a>
             </div>

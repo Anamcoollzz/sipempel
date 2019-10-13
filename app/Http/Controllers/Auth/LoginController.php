@@ -44,11 +44,9 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-        $loginDummy = \App\User::where('email', 'LIKE', '%demo%')->get();
         return view('auth.login', [
             'title'         => 'Masuk',
             'active'        => 'login',
-            'loginDummy'    => $loginDummy,
         ]);
     }
 }
