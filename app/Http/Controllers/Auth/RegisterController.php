@@ -81,6 +81,7 @@ class RegisterController extends Controller
     {
         return view('auth.register', [
             'title'     => 'Daftar',
+            'active'    => 'register'
         ]);
     }
 }

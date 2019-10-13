@@ -15,7 +15,40 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/jquery-ui.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/font-awesome/css/font-awesome.min.css') }}">
     @stack('css')
+    <style>
+        .sosmed i {
+            width: 20px;
+            height: 40px;
+        }
+        .sosmed {
+            background-color: #373737;
+            color: white;
+            text-decoration: none;
+            padding: 5px;
+            text-align: center;
+        }
+        .footer {
+            {{-- @if($active == 'dashboard' || $active == 'profil' || $active == 'masukan.index') --}}
+            position: absolute;
+            {{-- @endif --}}
+            bottom: 1px;
+            width: 100%;
+            /*height: 60px;*/
+            /*line-height: 60px;*/
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        @@media screen and (max-width: 375px){
+            .footer{
+                position: relative;
+            }
+        }
+
+    </style>
     @stack('style')
 </head>
 <body>
@@ -42,6 +75,17 @@
                         <li class="nav-item @if($active == 'pemasukan.index') active @endif">
                             <a class="nav-link" href="{{ route('pemasukan.index') }}">Pemasukan</a>
                         </li>
+                        <li class="nav-item @if($active == 'statistik.index') active @endif">
+                            <a class="nav-link" href="{{ route('statistik.index') }}">Statistik</a>
+                        </li>
+                        @endauth
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="author">Author</a>
+                        </li>
+                        @auth
+                        <li class="nav-item @if($active == 'masukan.index') active @endif">
+                            <a class="nav-link btn btn-primary btn-sm text-white" href="{{ route('masukan.index') }}">Yuk Kasih Masukan</a>
+                        </li>
                         @endauth
                     </ul>
 
@@ -49,44 +93,85 @@
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Masuk') }}</a>
-                            </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Daftar') }}</a>
-                                </li>
-                            @endif
+                        <li class="nav-item @if($active == 'login') active @endif">
+                            <a class="nav-link" href="{{ route('login') }}">{{ __('Masuk') }}</a>
+                        </li>
+                        @if (Route::has('register'))
+                        <li class="nav-item @if($active == 'register') active @endif">
+                            <a class="nav-link" href="{{ route('register') }}">{{ __('Daftar') }}</a>
+                        </li>
+                        @endif
                         @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->nama }} <span class="caret"></span>
-                                </a>
+                        <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                {{ Auth::user()->nama }} <span class="caret"></span>
+                            </a>
 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Keluar') }}
-                                    </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a href="{{ route('profil') }}" class="dropdown-item">Profil</a>
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                onclick="event.preventDefault();
+                                document.getElementById('logout-form').submit();">
+                                {{ __('Keluar') }}
+                            </a>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </div>
+                    </li>
+                    @endguest
+                </ul>
             </div>
-        </nav>
+        </div>
+    </nav>
 
-        <main class="py-4">
-            @yield('content')
-        </main>
-    </div>
-    <script src="{{ asset('js/app.js') }}"></script>
-    @stack('js')
-    @stack('script')
+    <main class="py-4" style="flex: 1 0 auto;">
+        @yield('content')
+    </main>
+
+    <footer class="footer bg-dark">
+        <div class="container text-center text-white">
+          <small>Copyright &copy; SISTEM INFORMASI PEMASUKAN DAN PENGELUARAN (SIPEMPEL) | ❤ Dibuat Oleh <a href="https://github.com/Anamcoollzz" target="_blank">Hairul Anam</a> ❤ | Versi Aplikasi 1.0.0</small>
+      </div>
+  </footer>
+</div>
+@include('layouts.modal-author')
+<script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('js/jquery-ui.js') }}"></script>
+@stack('js')
+<script>
+    @isset($kategori)
+    var kategoriAutoComplete = {!! $kategori->toJson() !!};
+    $('#kategori').autocomplete({
+        source : kategoriAutoComplete,
+    });
+    @endisset
+    @isset($tempat)
+    var tempatAutoComplete = {!! $tempat->toJson() !!};
+    $('#tempat').autocomplete({
+        source : tempatAutoComplete,
+    });
+    @endisset
+    $('#author').on('click', function(e){
+        e.preventDefault();
+        $('#modalAuthor').modal('show');
+    });
+
+    function setHeight() {
+        var sizeKonten = $('body').height();
+        if(sizeKonten > window.screen.height){
+            $('footer').css({
+                position : 'relative'
+            });
+        }
+    }
+    $(document).ready(function(){
+        setTimeout(function(){
+            setHeight();
+        }, 1000)
+    })
+</script>
+@stack('script')
 </body>
 </html>

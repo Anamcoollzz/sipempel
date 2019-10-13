@@ -8,6 +8,9 @@ use App\PemasukanPengeluaran;
 class PengeluaranController extends Controller
 {
 
+	protected $jenis = 'pengeluaran';
+	protected $color = 'danger';
+
 	public function index(Request $request)
 	{
 		$tanggal = $request->query('tanggal');
@@ -16,15 +19,21 @@ class PengeluaranController extends Controller
 		}elseif(!$this->isDate($tanggal)){
 			$tanggal = date('Y-m-d');
 		}
-		$data = PemasukanPengeluaran::where('jenis', 'pengeluaran')
+		$data = PemasukanPengeluaran::where('jenis', $this->jenis)
 		->where('tanggal', $tanggal)
 		->where('user_id', \Auth::id())
 		->latest()->get();
+		$kategori = PemasukanPengeluaran::where('jenis', $this->jenis)->groupBy('kategori')->get()->pluck('kategori');
+		$tempat = PemasukanPengeluaran::where('jenis', $this->jenis)->groupBy('tempat')->get()->pluck('tempat');
 		return view('pengeluaran.index', [
-			'title'		=> 'Pengeluaran',
+			'title'		=> ucfirst($this->jenis),
 			'data'		=> $data,
-			'active'	=> 'pengeluaran.index',
+			'active'	=> $this->jenis.'.index',
 			'tanggal'	=> $tanggal,
+			'kategori'	=> $kategori,
+			'tempat'	=> $tempat,
+			'jenis'		=> $this->jenis,
+			'color'		=> $this->color,
 		]);
 	}
 
@@ -39,6 +48,7 @@ class PengeluaranController extends Controller
 			'deskripsi'		=> ['nullable', 'string'],
 		]);
 		PemasukanPengeluaran::create([
+			'jenis'				=> $this->jenis,
 			'nama_item'			=> $request->item,
 			'kategori'			=> $request->kategori,
 			'nominal'			=> $request->nominal,
@@ -47,13 +57,13 @@ class PengeluaranController extends Controller
 			'deskripsi'			=> $request->deskripsi,
 			'user_id'			=> \Auth::id(),
 		]);
-		return redirect()->back()->with('success_msg', 'Pengeluaran berhasil ditambahkan');
+		return redirect($this->jenis.'?tanggal='.$request->tanggal)->with('success_msg', ucfirst($this->jenis).' berhasil ditambahkan');
 	}
 
 	public function destroy(PemasukanPengeluaran $pengeluaran)
 	{
 		$pengeluaran->delete();
-		return redirect()->back()->with('success_msg', 'Pengeluaran berhasil dihapus');
+		return redirect()->back()->with('success_msg', ucfirst($this->jenis).' berhasil dihapus');
 	}
 
 	private function isDate($date){

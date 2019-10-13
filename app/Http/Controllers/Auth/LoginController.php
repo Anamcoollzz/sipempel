@@ -25,7 +25,12 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    // protected $redirectTo = '/home';
+
+    public function redirectTo()
+    {
+        return request()->redirect ? request()->redirect : '/home';
+    }
 
     /**
      * Create a new controller instance.
@@ -39,8 +44,11 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
+        $loginDummy = \App\User::where('email', 'LIKE', '%demo%')->get();
         return view('auth.login', [
-            'title'     => 'Masuk',
+            'title'         => 'Masuk',
+            'active'        => 'login',
+            'loginDummy'    => $loginDummy,
         ]);
     }
 }

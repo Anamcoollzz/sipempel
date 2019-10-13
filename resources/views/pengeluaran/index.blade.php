@@ -8,10 +8,10 @@
 
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header bg-danger text-white">Pengeluaran Baru</div>
+                <div class="card-header bg-{{$color}} text-white">{{ ucfirst($jenis) }} Baru</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('pengeluaran.store') }}">
+                    <form method="POST" action="{{ route($jenis.'.store') }}">
                         @csrf
 
                         <div class="form-group row">
@@ -100,7 +100,7 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-danger">
+                                <button type="submit" class="btn btn-{{$color}}">
                                     {{ __('Simpan') }}
                                 </button>
                             </div>
@@ -112,7 +112,7 @@
 
         <div class="col-md-12">
             <div class="card mt-5">
-                <div class="card-header bg-danger text-white">Lihat Berdasarkan Tanggal</div>
+                <div class="card-header bg-{{$color}} text-white">Lihat Berdasarkan Tanggal</div>
 
                 <div class="card-body">
                     <form>
@@ -133,18 +133,18 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-danger">
+                                <button type="submit" class="btn btn-{{$color}}">
                                     {{ __('Lihat') }}
                                 </button>
                                 @if($tanggal != date('Y-m-d'))
-                                <a class="btn btn-danger" href="?tanggal={{ date('Y-m-d') }}">Hari Ini</a>
+                                <a class="btn btn-{{$color}}" href="?tanggal={{ date('Y-m-d') }}">Hari Ini</a>
                                 @endif
                                 @if($tanggal != date('Y-m-d', strtotime('-1 days')))
-                                <a class="btn btn-danger" href="?tanggal={{ date('Y-m-d', strtotime('-1 days')) }}">Kemarin</a>
+                                <a class="btn btn-{{$color}}" href="?tanggal={{ date('Y-m-d', strtotime('-1 days')) }}">Kemarin</a>
                                 @endif
                                 @foreach (range(2, 4) as $jarak)
                                 @if($tanggal != date('Y-m-d', strtotime('-'.$jarak.' days')))
-                                <a class="btn btn-danger" href="?tanggal={{ date('Y-m-d', strtotime('-'.$jarak.' days')) }}">{{ $jarak }} Hari Lalu</a>
+                                <a class="btn btn-{{$color}}" href="?tanggal={{ date('Y-m-d', strtotime('-'.$jarak.' days')) }}">{{ $jarak }} Hari Lalu</a>
                                 @endif
                                 @endforeach
                             </div>
@@ -156,7 +156,7 @@
 
         <div class="col-md-12">
             <div class="card mt-5">
-                <div class="card-header bg-danger text-white">{{ $title }} anda pada {{ $tanggal }}</div>
+                <div class="card-header bg-{{$color}} text-white">{{ $title }} anda pada {{ $tanggal }}</div>
 
                 <div class="card-body">
                     <table id="dt" class="table table-bordered table-striped table-hovered">
@@ -181,7 +181,7 @@
                                 <td>{{ $d->tempat }}</td>
                                 <td>{{ $d->deskripsi }}</td>
                                 <td>
-                                    <a onclick="hapus(event, '{{ route('pengeluaran.destroy', [$d->id]) }}')" href="#" class="btn btn-danger btn-sm">Hapus</a>
+                                    <a onclick="hapus(event, '{{ route($jenis.'.destroy', [$d->id]) }}')" href="#" class="btn btn-{{$color}} btn-sm">Hapus</a>
                                 </td>
                             </tr>
                             @endforeach
@@ -196,6 +196,7 @@
 
 @include('import.datatable')
 
+@if($color == 'danger')
 @push('style')
 <style>
     .page-item.active .page-link {
@@ -206,6 +207,7 @@
     }
 </style>
 @endpush
+@endif
 
 @push('script')
 <form action="" id="form-hapus" method="post">

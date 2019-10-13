@@ -1,23 +1,22 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::get('/', function () {
-    return view('welcome');
+	return view('welcome');
 });
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::middleware(App\Http\Middleware\HarusMasuk::class)->group(function(){
 
-Route::resource('pengeluaran', 'PengeluaranController')->only('store', 'index', 'destroy');
-Route::resource('pemasukan', 'PemasukanController');
+
+	Route::get('/home', 'HomeController@index')->name('home');
+
+	Route::resource('pengeluaran', 'PengeluaranController')->only('store', 'index', 'destroy');
+	Route::resource('pemasukan', 'PemasukanController')->only('store', 'index', 'destroy');
+	Route::match(['get', 'post'], '/statistik', 'StatistikController')->name('statistik.index');
+	Route::get('/profil', 'HomeController@profil')->name('profil');
+	Route::put('/profil', 'HomeController@perbarui')->name('perbarui');
+	Route::get('/masukan', 'HomeController@masukan')->name('masukan.index');
+	Route::post('/masukan', 'HomeController@masukanPost');
+	
+});
